@@ -1,3 +1,12 @@
-$key = "APP_LOCALE";
-$value = $request->lang;
-file_put_contents(app()->environmentFilePath(), str_replace($key . '=' . env($key), $key . '=' . $value, file_get_contents(app()->environmentFilePath())));
+public function putPermanentEnv($key, $value)
+    {
+        $path = app()->environmentFilePath();
+
+        $escaped = preg_quote('=' . env($key), '/');
+
+        file_put_contents($path, preg_replace(
+            "/^{$key}{$escaped}/m",
+            "{$key}={$value}",
+            file_get_contents($path)
+        ));
+    }
